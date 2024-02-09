@@ -1,0 +1,489 @@
+Manager:
+    id: Manager
+
+    MainScreen:
+    FirstScreen:
+    PropertyDetails:
+
+<ContentCustomSheet>:
+    canvas.before:
+        Color:
+            rgba: .119, .136, .153, 1  # Border color
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+#<Details_button>:
+#   on_release:
+#        app.manager.transition.direction = "left"
+
+
+<ItemForCustomBottomSheet>:
+    IconLeftWidget:
+        icon: root.icon
+
+<CustomIconButton>:
+    # Custom MDIconButton to allow specifying icon color
+    size_hint: None, None
+    size: dp(448), dp(448)  # Set the size of the icon button
+    #icon: 'magnify'
+    icon_color: 1,1,1,1
+
+<MyMapMarker>:
+    # AND CREATE POPUP IN YOU MARKER
+    popup_size:dp(230),dp(130)
+    Bubble:
+        MDBoxLayout:
+            padding:"4dp"
+            MDLabel:
+                text:"Home"
+                markup:True
+                halign:"center"
+
+                theme_text_color: "Custom"
+                text_color: .119, .136, .153, 1
+                bold: True
+
+<ContentCustomSheet@BoxLayout>:
+    id: custom_bottom_sheet
+    orientation: 'vertical'
+    size_hint: 1, .6
+    radius_from: 'top'
+    padding: [10,0,10,0]
+
+    Label:
+        id: sheet_label
+        text: ''
+
+
+<PropertyDescLabel@Label>:
+    font_name: r"C:\Users\scorp\Desktop\Programmin\Map App\fonts\RobotoSlab.ttf"
+    font_size: 14
+    color: 184/255, 184/255, 186/255, 1
+    halign: 'left'
+    valign: 'middle'
+    text_size: self.size
+
+#-----------------------------------------------------------------------------
+
+
+<FirstScreen>
+    name: "FirstScreen"
+    id: FirstScreen
+    md_bg_color: .119, .136, .153, 1
+    background_color: .119, .136, .153, 1
+
+    canvas.before:
+        Color:
+            rgba: .119, .136, .153, 1  # White color for the border
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    FloatLayout:
+        size: self.parent.width, self.parent.height
+        #orientation: 'vertical'
+        cols: 1
+        rows: 2
+
+        FitImage:
+            size_hint: None, None
+            height: dp(128)
+            width: dp(128)
+            pos_hint: {"center_x": 0.5, "center_y": 0.65}
+            source: r'C:\Users\scorp\Desktop\Programmin\Map App\imgs\map.png'
+
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: 0.8, None
+            #height: self.minimum_height
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            spacing: "12dp"
+            padding: "12dp"
+
+            NextButton:
+                text : "List Property"
+                font_name: r'C:\Users\scorp\Desktop\Programmin\Map App\fonts\Anonymous.ttf'
+                size_hint: .55, .45  # Disable size_hint so that the button size is based on its actual size
+                font_size: 17
+                on_release:
+                    app.root.current = "MainScreen"
+                    root.manager.transition.direction = "left"
+
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                background_normal: ''
+                background_color: 73/255, 65/255, 52/255, 1
+
+            NextButton:
+                text : "Find Property"
+                font_name: r'C:\Users\scorp\Desktop\Programmin\Map App\fonts\Anonymous.ttf'
+                size_hint: .55, .45  # Disable size_hint so that the button size is based on its actual size
+                font_size: 17
+                on_release:
+                    app.root.current = "MainScreen"
+                    root.manager.transition.direction = "left"
+
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                background_normal: ''
+                background_color: 73/255, 65/255, 52/255, 1
+
+
+
+<MainScreen>:
+    name: "MainScreen"
+    id: MainScreen
+    model: app.model_ins
+
+    RelativeLayout:
+        AbuDhabiMap:
+            lat: 24.4699
+            lon: 54.3725
+            zoom: 15
+
+        # CREATE TOOLBAR
+        MDBoxLayout:
+            spacing:0
+            padding:10
+            orientation: 'horizontal'
+            pos_hint: {'y': 0.90}
+            md_bg_color: .119, .136, .153, 1
+            MDBoxLayout:
+                radius:30
+                size_hint_x: 0.1
+                size_hint_y: .2
+                MenuButton:
+                    id: Menu_Button
+                    on_release:
+                        nav_drawer.set_state('toggle')
+                    icon:"menu"
+                    md_bg_color: .119, .136, .153, 1
+                    icon_color:"white"
+
+
+            MDBoxLayout:
+                size_hint_x:0.4
+                SearchField:
+                    mode: "rectangle"
+                    line_color_normal: "white"
+                    hint_text: "Search by Location...  "
+                    icon_right: "magnify"
+                    icon_right_color: "white"
+                    line_color_focus: 1, 1, 1, 1
+                    size_hint_x: None
+                    width: dp(350)
+                    multiline: False
+
+
+        MDNavigationDrawer:
+            id: nav_drawer
+            type: "standard"
+            md_bg_color: .119, .136, .153, 1
+            MDBoxLayout:
+                orientation: 'vertical'
+
+                ScrollView:
+                    size_hint: 1, 1
+
+                    MDList:
+                        OneLineListItem:
+                            text: 'Filter'
+                            on_release:
+                                nav_filter.set_state('toggle')
+                        GoBackListItem:
+                            text: 'Go Back'
+                            on_release:
+                                nav_drawer.set_state('toggle')
+                                self.release()
+                                root.manager.transition.direction = "right"
+
+
+
+
+                MDBoxLayout:
+                    size_hint: .2,.1
+                    pos_hint_y: .1
+                    orientation: 'horizontal'
+
+
+                    MDIconButton:
+                        id: Back
+                        pos_hint: {'center_x': .05, 'center_y': .5}
+                        on_release:
+                            nav_drawer.set_state('toggle')
+                        icon:"arrow-left"
+                        md_bg_color: .119, .136, .153, 1
+                        icon_color:"white"
+                        elevation: 0  # Disable the shadow
+                        md_bg_color_disabled: None
+
+        MDNavigationDrawer:
+            id: nav_filter
+            type: "standard"
+            md_bg_color: .119, .136, .153, 1
+            MDBoxLayout:
+                orientation: 'vertical'
+
+                ScrollView:
+                    size_hint: 1, 1
+
+                    MDList:
+                        MDTextField:
+                            hint_text: "Price Range    "
+                            multiline: False
+                        MDTextField:
+                            hint_text: 'How many Rooms?     '
+                            multiline: False
+                        MDTextField:
+                            hint_text: 'How many Bathrooms?   '
+                            multiline: False
+
+                        MDRoundFlatButton:
+                            text: "  Filter  "
+                            padding: dp(10)
+                            font_size: dp(18)
+
+
+
+
+                MDBoxLayout:
+                    size_hint: .2,.1
+                    pos_hint_y: .1
+                    orientation: 'horizontal'
+
+
+                    MDIconButton:
+                        id: Back
+                        pos_hint: {'center_x': .05, 'center_y': .5}
+                        on_release:
+                            nav_filter.set_state('toggle')
+                            nav_drawer.set_state('toggle')
+                        icon:"arrow-left"
+                        md_bg_color: .119, .136, .153, 1
+                        icon_color:"white"
+                        elevation: 0  # Disable the shadow
+                        md_bg_color_disabled: None
+
+
+<PropertyDetails>:
+    id: PropertyDetails
+    name: "PropertyDetails"
+    ScrollView:
+        do_scroll_y: True
+
+        canvas.before:
+            Color:
+                rgba: .119, .136, .153, 1  # White color for the border
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        MDBoxLayout:
+            id: content_box
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+
+
+            ScrollView:
+                size_hint_y: None
+                height: root.height * 0.4
+                do_scroll_y: False
+                do_scroll_x: True
+
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 1  # White color for the border
+                    Line:
+                        rectangle: self.x + 5, self.y + 5, self.width - 10, self.height - 10  # Adjust border width here
+                        width: 2  # Adjust border thickness here
+
+                MDBoxLayout:
+                    size_hint_x: 4
+                    FitImage:
+                        source: "imgs/house.png"
+                    FitImage:
+                        source: "imgs/Magnify.png"
+
+
+            GridLayout:
+                cols: 1
+                rows: 2
+                size_hint_y: None
+
+
+                MDBoxLayout:
+                    canvas.before:
+                        Color:
+                            rgba: 0.15, 0.165, 0.183, 1  # Background color slightly lighter than the given color
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+
+                    Label:
+                        text: 'Upgraded - Single Row - Vacant - Large Plot'
+                        font_name: "Roboto-Bold"
+                        font_size: 18
+                        bold: True
+                        markup: True
+                        color: 220/255, 220/255, 220/255, 1
+
+
+
+                GridLayout:
+                    cols: 2
+                    rows: 3
+                    row_default_height: '40dp'  # Adjust the height of each row
+                    row_force_default: True
+                    spacing: '10dp'  # Add more white space between rows
+                    padding: '10dp'
+
+
+
+                    MDBoxLayout:
+                        orientation: 'horizontal'
+                        padding: dp(0), dp(8)
+                        spacing: dp(5)
+                        Image:
+                            source: "imgs/building.png"
+                            size_hint: None, None
+                            size: dp(20), dp(20)  # Adjust the size of the icon as needed
+                            pos_hint_y: .5
+
+                        MDBoxLayout:
+                            padding: dp(5), dp(0)
+                            PropertyDescLabel:
+                                id: 1,1
+                                text: 'Property type:'
+                            ValueLabel:
+                                text: 'Villa'
+
+
+                    MDBoxLayout:
+                        orientation: 'horizontal'
+                        padding: dp(0), dp(8)
+                        spacing: dp(5)
+                        Image:
+                            source: "imgs/size.png"
+                            size_hint: None, None
+                            size: dp(20), dp(20)  # Adjust the size of the icon as needed
+                            pos_hint_y: .5
+
+                        MDBoxLayout:
+                            padding: dp(0), dp(0)
+                            PropertyDescLabel:
+                                text: 'Property size:'  # '1, 2'
+
+                            ValueLabel:
+                                text: '4,892 sqft/454 sqm'
+
+                    MDBoxLayout:
+                        orientation: 'horizontal'
+                        padding: dp(0), dp(8)
+                        spacing: dp(5)
+                        Image:
+                            source: "imgs/bed.png"
+                            size_hint: None, None
+                            size: dp(20), dp(20)  # Adjust the size of the icon as needed
+                            pos_hint_y: .5
+
+                        MDBoxLayout:
+                            padding: dp(5), dp(0)
+                            PropertyDescLabel:
+                                text: 'Bedrooms:'  # 2, 1
+
+                            ValueLabel:
+                                text: '3'
+
+                    MDBoxLayout:
+                        orientation: 'horizontal'
+                        padding: dp(0), dp(8)
+                        spacing: dp(5)
+                        Image:
+                            source: "imgs/toilet.png"
+                            size_hint: None, None
+                            size: dp(20), dp(20)  # Adjust the size of the icon as needed
+                            pos_hint_y: .5
+
+                        MDBoxLayout:
+                            padding: dp(5), dp(0)
+                            PropertyDescLabel:
+                                text: 'Bathrooms:'  # 2, 2
+
+                            ValueLabel:
+                                text: '2'
+
+                    MDBoxLayout:
+                        orientation: 'horizontal'
+                        padding: dp(0), dp(8)
+                        spacing: dp(5)
+                        Image:
+                            source: "imgs/date.png"
+                            size_hint: None, None
+                            size: dp(20), dp(20)  # Adjust the size of the icon as needed
+                            pos_hint_y: .5
+
+                        MDBoxLayout:
+                            padding: dp(5), dp(0)
+                            PropertyDescLabel:
+                                text: 'Availability:'  # 3, 1
+
+                            ValueLabel:
+                                text: 'from 2 April 2024'
+
+                    MDBoxLayout:
+                        orientation: 'horizontal'
+                        padding: dp(0), dp(8)
+                        spacing: dp(5)
+                        Image:
+                            source: "imgs/dollar.png"
+                            size_hint: None, None
+                            size: dp(20), dp(20)  # Adjust the size of the icon as needed
+                            pos_hint_y: .5
+
+                        MDBoxLayout:
+                            padding: dp(5), dp(0)
+                            PropertyDescLabel:
+                                text: 'Price:     '  # 3, 2
+
+                            ValueLabel:
+                                text: '200k Dhs/ yearly'
+
+            MDBoxLayout:
+                size_hint_y: None
+                height: dp(375)
+
+
+                MDCard:
+                    size_hint: None, None
+                    size: self.parent.width , dp(180)  # Adjust the size of the card
+                    pos_hint: {'center_x': 0.5, 'center_y': .35}
+                    elevation: 0  # Adjust the elevation of the card
+                    padding: dp(0)
+
+                    MDLabel:
+                        text: "Contact Information"
+                        font_style: "Subtitle1"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        halign: "center"
+
+                    MDLabel:
+                        text: "Name: Abdalla Elgali\nPhone: +971567621363\nEmail: abdallaelgali342@gmail.com"
+                        font_style: "Body1"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        halign: "left"
+
+                    MDIconButton:
+                        id: Back
+                        on_release:
+                            app.root.current = "MainScreen"
+                            root.manager.transition.direction = "right"
+                        icon: "arrow-left"
+                        md_bg_color: .119, .136, .153, 0
+                        icon_color: "white"
+                        elevation: 0  # Disable the shadow
+                        #md_bg_color_disabled: None
